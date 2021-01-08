@@ -5,6 +5,8 @@ import { Provider } from "react-redux";
 import thunk from "redux-thunk";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
+
+
 import "./index.css";
 import reducer from "./reducers";
 import EventsIndex from "./components/events_index";
