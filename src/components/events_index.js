@@ -2,8 +2,23 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import _ from "lodash";
 import { Link } from "react-router-dom";
-
+import AddIcon from "@material-ui/icons/Add";
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableCell,
+  TableRow,
+  Fab,
+} from "@material-ui/core";
 import { readEvents } from "../actions";
+
+const style = {
+  right: 20,
+  bottom: 20,
+  position: "fixed",
+};
+
 class EventsIndex extends Component {
   componentDidMount() {
     this.props.readEvents();
@@ -11,28 +26,31 @@ class EventsIndex extends Component {
 
   renderEvents() {
     return _.map(this.props.events, (event) => (
-      <tr key={event.id}>
-        <td>{event.id}</td>
-        <td>
+      <TableRow key={event.id}>
+        <TableCell>{event.id}</TableCell>
+        <TableCell>
           <Link to={`/events/${event.id}`}>{event.title}</Link>
-        </td>
-        <td>{event.body}</td>
-      </tr>
+        </TableCell>
+        <TableCell>{event.body}</TableCell>
+      </TableRow>
     ));
   }
   render() {
     return (
       <>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Body</th>
-            </tr>
-          </thead>
-          <tbody>{this.renderEvents()}</tbody>
-        </table>
+        <Fab color="primary" aria-label="add" href="/events/new" style={style}>
+          <AddIcon />
+        </Fab>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell>Body</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>{this.renderEvents()}</TableBody>
+        </Table>
 
         <Link to="/events/new">New Event</Link>
       </>
