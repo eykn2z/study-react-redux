@@ -39,7 +39,7 @@ class EventsNew extends Component {
     this.props.history.push("/");
   }
 
-  renderFields = ({ handleSubmit, pristine, submitting }) => (
+  renderFields = ({ handleSubmit, pristine, submitting, invalid }) => (
     <form onSubmit={handleSubmit}>
       <div>
         <Field
@@ -59,7 +59,11 @@ class EventsNew extends Component {
       </div>
 
       <div>
-        <input type="submit" value="Submit" disabled={pristine || submitting} />
+        <input
+          type="submit"
+          value="Submit"
+          disabled={pristine || submitting || invalid}
+        />
         <Link to="/">Cancel</Link>
       </div>
     </form>

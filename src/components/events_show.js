@@ -12,6 +12,11 @@ class EventsShow extends Component {
     this.onDeleteClick = this.onDeleteClick.bind(this);
   }
 
+  componentDidMount() {
+    const { id } = this.props.match.params;
+    if (id) this.props.getEvent(id);
+  }
+
   renderField(field) {
     const {
       input,
@@ -27,6 +32,17 @@ class EventsShow extends Component {
     );
   }
 
+  async onDeleteClick() {
+    const { id } = this.props.match.params;
+    await this.props.deleteEvent(id);
+    this.props.history.push("/");
+  }
+
+  async onSubmit(values) {
+    await this.props.putEvent(values);
+    this.props.history.push("/");
+  }
+
   validate = (values) => {
     const errors = {};
 
@@ -35,45 +51,40 @@ class EventsShow extends Component {
     return errors;
   };
 
-  async onDeleteClick() {
-    const { id } = this.props.match.params;
-    await this.props.deleteEvent(id);
-    this.props.history.push("/");
-  }
+  renderFields = ({ handleSubmit, pristine, submitting, invalid }) => {
+    return (
+      <form onSubmit={handleSubmit}>
+        <div>
+          <Field
+            label="Title"
+            name="title"
+            type="text"
+            component={this.renderField}
+          />
+        </div>
+        <div>
+          <Field
+            label="Body"
+            name="body"
+            type="text"
+            component={this.renderField}
+          />
+        </div>
 
-  async onSubmit(values) {
-    await this.props.postEvent(values);
-    this.props.history.push("/");
-  }
-
-  renderFields = ({ handleSubmit, pristine, submitting }) => (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <Field
-          label="Title"
-          name="title"
-          type="text"
-          component={this.renderField}
-        />
-      </div>
-      <div>
-        <Field
-          label="Body"
-          name="body"
-          type="text"
-          component={this.renderField}
-        />
-      </div>
-
-      <div>
-        <input type="submit" value="Submit" disabled={pristine || submitting} />
-        <Link to="/">Cancel</Link>
-        <Link to="/" onClick={this.onDeleteClick}>
-          Delete
-        </Link>
-      </div>
-    </form>
-  );
+        <div>
+          <input
+            type="submit"
+            value="Submit"
+            disabled={pristine || submitting || invalid}
+          />
+          <Link to="/">Cancel</Link>
+          <Link to="/" onClick={this.onDeleteClick}>
+            Delete
+          </Link>
+        </div>
+      </form>
+    );
+  };
 
   render() {
     return (
@@ -81,11 +92,15 @@ class EventsShow extends Component {
         onSubmit={this.onSubmit}
         validate={this.validate}
         render={this.renderFields}
+        initialValues={this.props.initialValues}
       />
     );
   }
 }
 
+const mapStateToProps = (state, ownProps) => ({
+  initialValues: state.events[ownProps.match.params.id],
+});
 const mapDispatchToProps = { getEvent, deleteEvent, putEvent };
 
-export default connect(null, mapDispatchToProps)(EventsShow);
+export default connect(mapStateToProps, mapDispatchToProps)(EventsShow);
