@@ -3,12 +3,13 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Form, Field } from "react-final-form";
 
-import { postEvent } from "../actions";
+import { getEvent, deleteEvent, putEvent } from "../actions";
 
-class EventsNew extends Component {
+class EventsShow extends Component {
   constructor(props) {
     super(props);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onDeleteClick = this.onDeleteClick.bind(this);
   }
 
   renderField(field) {
@@ -33,6 +34,12 @@ class EventsNew extends Component {
     if (!values.body) errors.body = "Enter a body, please.";
     return errors;
   };
+
+  async onDeleteClick() {
+    const { id } = this.props.match.params;
+    await this.props.deleteEvent(id);
+    this.props.history.push("/");
+  }
 
   async onSubmit(values) {
     await this.props.postEvent(values);
@@ -61,6 +68,9 @@ class EventsNew extends Component {
       <div>
         <input type="submit" value="Submit" disabled={pristine || submitting} />
         <Link to="/">Cancel</Link>
+        <Link to="/" onClick={this.onDeleteClick}>
+          Delete
+        </Link>
       </div>
     </form>
   );
@@ -76,6 +86,6 @@ class EventsNew extends Component {
   }
 }
 
-const mapDispatchToProps = { postEvent };
+const mapDispatchToProps = { getEvent, deleteEvent, putEvent };
 
-export default connect(null, mapDispatchToProps)(EventsNew);
+export default connect(null, mapDispatchToProps)(EventsShow);
