@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import { Form, Field } from "react-final-form";
-
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 import { getEvent, deleteEvent, putEvent } from "../actions";
 
 class EventsShow extends Component {
@@ -25,10 +25,14 @@ class EventsShow extends Component {
       meta: { touched, error },
     } = field;
     return (
-      <div>
-        <input {...input} placeholder={label} type={type} />
-        {error && touched && <span>{error}</span>}
-      </div>
+      <TextField
+        helperText={touched && error && error}
+        label={label}
+        type={type}
+        error={Boolean(touched && error)}
+        {...input}
+        fullWidth={true}
+      />
     );
   }
 
@@ -72,15 +76,32 @@ class EventsShow extends Component {
         </div>
 
         <div>
-          <input
+          <Button
+            label="Submit"
             type="submit"
-            value="Submit"
+            style={{ margin: 12 }}
             disabled={pristine || submitting || invalid}
-          />
-          <Link to="/">Cancel</Link>
-          <Link to="/" onClick={this.onDeleteClick}>
+            variant="outlined"
+          >
+            Submit
+          </Button>
+          <Button
+            label="Cancel"
+            style={{ margin: 12 }}
+            variant="outlined"
+            href="/"
+          >
+            Cancel
+          </Button>
+          <Button
+            label="Delete"
+            style={{ margin: 12 }}
+            variant="outlined"
+            href="/"
+            onClick={this.onDeleteClick}
+          >
             Delete
-          </Link>
+          </Button>
         </div>
       </form>
     );

@@ -51,8 +51,6 @@ class EventsIndex extends Component {
           </TableHead>
           <TableBody>{this.renderEvents()}</TableBody>
         </Table>
-
-        <Link to="/events/new">New Event</Link>
       </>
     );
   }
